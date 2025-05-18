@@ -1,0 +1,110 @@
+{% extends('layout.html') %}
+
+{% block content %}
+<h1 align="center" style="color:#0d0357;font-weight:bold;">SCAN Result: <b>{{exam_result_check}}</h1>
+
+<section style="background:url(https://www.iiuc.ac.bd/home/show-image/images4dZfTMdaau8PzjIZ8h9Rbgg21amOhWhyqq4DlS7mLKs);padding-bottom:100px" class="top-speakers-section bg-none" >
+   <div class="container-fluid">
+      <div style="background:#c8d8d7;" class="row well">
+         <div class="container">
+            <div style="padding-right:0px;border-bottom-right-radius:50px;border-bottom-left-radius:50px;" class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
+               <div style="background:white;border:1px solid rgb(13 3 87);padding:0px;">
+                  <ul style="border-bottom:1px solid rgb(13 3 87);" class="nav nav-tabs">
+                     <li class="active"><a data-toggle="tab" href="#tab-4" style="padding-right:3px;padding-left:3px;" aria-expanded="true">Uploaded ID card</a></li>
+                     
+                  </ul>
+                  <div class="tab-content">
+                     <div id="tab-4" class="tab-pane fade active in">
+                        <div class="row">
+                           <div class="container-fluid" >
+                              
+                            <div style="padding:10px">
+                            {% if image_data %}
+                                      <img src="{{ image_data }}" width="100%" height="auto" alt="Admit Card Preview">
+                            {% else %}
+                                <p style="color:black;">No image data received.</p>
+                            {% endif %}
+                            <hr>
+                            <br>
+                              Student ID: <b>{{ student_info.id }}</b><br>
+                              Student Name: <b>{{ student_info.name }}</b><br><br>
+                              Session: {{ student_info.session }}<br>
+                              Registration No: {{ student_info.registration_no }}<br>
+                              Father's Name: {{ student_info.father_name }}<br>
+                              Mother's Name: {{ student_info.mother_name }}<br>
+                              Section: {{ student_info.section }}<br>
+                              Program: {{ student_info.program }}<br>
+                              Validity: {{ student_info.validity }}<br>
+                              Print Date: {{ student_info.print_date }}<br>
+                              Semester enrolled: {{ course_info.semester_enrolled }}<br>
+                              Signature by controller: {{ course_info.controller_signature }}<br>
+                              <hr>
+                             <table style="color:black; width:100%; border-collapse: collapse;" border="1">
+                               <thead>
+                                 <tr>
+                                   <th style="padding: 8px; text-align: left;color:black;">Code</th>
+                                   <th style="padding: 8px; text-align: left;color:black;">Course Name</th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                 {% for course in course_info.courses %}
+                                 <tr>
+                                   <td style="padding: 8px;color:black;">{{ course.code }}</td>
+                                     <td style="padding: 8px;color:black;">{{ course.name|replace("_", " ")|replace("—", " ") }}</td>
+                                 </tr>
+                                 {% endfor %}
+                               </tbody>
+                             </table>
+                            </div>
+                           <br>
+
+                           </div>
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+            <div style="padding-left:10px;padding-right:0px;border-bottom-right-radius:50px;border-bottom-left-radius:50px;" class="col-md-6 col-sm-12">
+               <div style="border:1px solid rgb(13 3 87);padding:0px;background-color: #0d0357;">
+                  <ul class="nav nav-tabs">
+                     <li class="active"><a data-toggle="tab" href="#tab-1" style="padding-right:3px;padding-left:3px;">
+                        Processing result
+                     </a></li>
+                     
+                  </ul>
+                  <div class="tab-content">
+                     <div id="tab-1" class="tab-pane fade in active">
+                        <div class="transparent">
+                           <div class="row">
+                              <div class="container-fluid">
+                                 <div style="background:white;padding-top:1px;padding-bottom:1px;padding-left:5px;border-bottom:1px solid #d5d5d5;" class="col-lg-12">
+
+                                  <img src="{{ id_card_data_uri }}" width="100%" height="auto" alt="Admit Card Preview">
+                                  <br><br>
+                                  <img src="{{ crop_image_information }}" width="100%" height="auto" alt="Admit Card Preview">
+                                  <br><br>
+                                  <img src="{{ crop_image_information_1 }}" width="100%" height="auto" alt="Admit Card Preview">
+                                  <br><br>
+                                  <img src="{{ crop_image_information_2 }}" width="100%" height="auto" alt="Admit Card Preview">
+                                  <br><br>
+                                  <img src="{{ crop_image_information_1_highlighted }}" width="100%" height="auto" alt="Admit Card Preview">
+                                  <br><br>
+                                  <img src="{{ crop_image_information_2_highlighted }}" width="100%" height="auto" alt="Admit Card Preview">
+                                  
+                                 </div>
+                              </div>
+                           </div>
+
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+{% endblock %}

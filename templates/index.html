@@ -1,0 +1,254 @@
+{% extends('layout.html') %}
+
+{% block content %}
+<h1 align="center" style="color:#0d0357;font-weight:bold;">SCAN STUDENT FAKE ADMIT CARD IN EXAM</h1>
+
+<section style="background:url(https://www.iiuc.ac.bd/home/show-image/images4dZfTMdaau8PzjIZ8h9Rbgg21amOhWhyqq4DlS7mLKs);padding-bottom:100px" class="top-speakers-section bg-none" >
+   <div class="container-fluid">
+      <div style="background:#c8d8d7;" class="row well">
+         <div class="container">
+            <div style="padding-right:0px;border-bottom-right-radius:50px;border-bottom-left-radius:50px;" class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
+               <div style="background:white;border:1px solid rgb(13 3 87);padding:0px;">
+                  <ul style="border-bottom:1px solid rgb(13 3 87);" class="nav nav-tabs">
+                     <li class="active"><a data-toggle="tab" href="#tab-4" style="padding-right:3px;padding-left:3px;" aria-expanded="true">Upload ID card</a></li>
+                     <li class=""><a data-toggle="tab" href="#tab-5" style="padding-right:3px;padding-left:3px;" aria-expanded="false">Student Info</a></li>
+                     <li><a data-toggle="tab" href="#tab-6" style="padding-right:3px;padding-left:3px;">Exam routine</a></li>
+                     <li><a data-toggle="tab" href="#tab-7" style="padding-right:3px;padding-left:3px;">Student wise exam routine</a></li>
+                  </ul>
+                  <div class="tab-content">
+                     <div id="tab-4" class="tab-pane fade active in">
+                        <div class="row">
+                           <div class="container-fluid" style="padding-bottom:106px">
+                              <div style="padding:5px;" >
+                                 <h4>IIUC-Exam-Admit-Card-Cheker : Automated Fake Admit Card Detector & Enforcement System Using Image Processing</h4>
+                                 <font size="2" color="black">
+                                     <br>
+                                     The Student Admit Card Verification System utilizes cutting-edge image processing technology to detect fraudulent admit cards during examinations. This system ensures the integrity of the examination process by identifying and flagging fake admit cards in real-time, providing a secure and efficient solution for educational institutions.                   
+                                 </font>
+                              </div>
+
+                              <form id="scanForm" class="form-horizontal" action="{{ url_for('scan_admit_card') }}" method="post" enctype="multipart/form-data" style="padding:5px;">
+
+                                 <div class="form-group">
+                                    <div class="col-md-12">
+                                       <label for="admit_card_image" style="color:black">Exam date</label>
+                                       <input id="exam_date" type="date" class="form-control" name="exam_date" placeholder="Exam date" >
+                                    </div>
+                                 </div>
+               
+            
+                                  <input type="hidden" name="admit_card_base64" id="admit_card_base64">
+               
+                                 <div class="form-group">
+                                    <div class="col-md-12">
+                                       <label for="admit_card_image" style="color:black">Upload Student Admit Card</label>
+                                       <input type="file" class="form-control" name="admit_card_image" id="admit_card_image" accept="image/*" required>
+                                    </div>
+                                 </div>
+               
+               
+                                 <div class="form-group mar-bot-0">
+                                    <div class="col-md-12">
+                                       <i class="waves-effect waves-light light-btn waves-input-wrapper" style="">
+                                       <input type="submit" onclick="return convertToBase64()" value="Scan to detect fake" class="btn btn-info">
+                                       </i>
+                                    </div>
+                                 </div>
+                              </form>
+                              <br><br><br>
+
+                           </div>
+                        </div>
+                     </div>
+                     <div id="tab-5" class="tab-pane fade">
+                        <div style="position:relative;padding:5px;" >
+                           <h4>Student infromation</h4>
+                           <table class="table table-bordered">
+                              <thead>
+                                 <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Semester</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 {% for student in students_db %}
+                                 <tr>
+                                    <td>{{ student.student_id }}</td>
+                                    <td>{{ student.student_name }}</td>
+                                    <td>{{ student.semester_name }}</td>
+                                 </tr>
+                                 {% endfor %}
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                     
+                     <div id="tab-6" class="tab-pane fade">
+                        <div style="padding:5px;" >
+                           <h4>Exam routine</h4>
+                           <br>
+                           {% for item in exam_routines %}
+                           <h5>{{ item.date }}</h5>
+                           <table class="table table-bordered">
+                               <thead>
+                                   <tr>
+                                       <th>Subject Code</th>
+                                       <th>Subject Name</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for exam in item.exams %}
+                                       <tr>
+                                           <td>{{ exam.subject_code }}</td>
+                                           <td>{{ exam.subject_name }}</td>
+                                       </tr>
+                                   {% endfor %}
+                               </tbody>
+                           </table>
+                       {% endfor %}
+                        </div>
+                     </div>
+                     <div id="tab-7" class="tab-pane fade">
+                        <div style="padding:5px;" >
+                           {% for student in student_wise_exam_routines %}
+                               <div class="student-block">
+                                   <h4>{{ student.student_name }} (ID: {{ student.student_id }}) - Semester {{ student.semester }}</h4>
+                                   <table class="table table-bordered">
+                                       <thead>
+                                           <tr>
+                                               <th>Subject Code</th>
+                                               <th>Subject Name</th>
+                                               <th>Exam Date</th>
+                                           </tr>
+                                       </thead>
+                                       <tbody>
+                                           {% for subject in student.subjects %}
+                                               <tr>
+                                                   <td>{{ subject.subject_code }}</td>
+                                                   <td>{{ subject.subject_name }}</td>
+                                                   <td>{{ subject.exam_date }}</td>
+                                               </tr>
+                                           {% endfor %}
+                                       </tbody>
+                                   </table>
+                               </div>
+                           {% endfor %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div style="padding-left:10px;padding-right:0px;border-bottom-right-radius:50px;border-bottom-left-radius:50px;" class="col-md-6 col-sm-12">
+               <div style="border:1px solid rgb(13 3 87);padding:0px;background-color: #0d0357;">
+                  <ul class="nav nav-tabs">
+                     <li class="active"><a data-toggle="tab" href="#tab-1" style="padding-right:3px;padding-left:3px;">
+                        Scan student ID card
+                     </a></li>
+                     
+                  </ul>
+                  <div class="tab-content">
+                     <div id="tab-1" class="tab-pane fade in active">
+                        <div class="transparent">
+                           <div class="row">
+                              <div class="container-fluid">
+                                 <div style="background:white;padding-top:1px;padding-bottom:1px;padding-left:5px;border-bottom:1px solid #d5d5d5;" class="col-lg-12">
+                                    <img src="{{ url_for('text_feed') }}" width="100%" height="auto" alt="Video Feed">
+                                    <div style="margin-top: 20px;">
+                                        <h5 style="color: black;">Detected Info:</h5>
+                                        <p style="color: blue;font-size:15px"><b>ID: <span id="detected-id">--</span></b></p>
+                                        <p style="color: blue;">Student info: <span id="detected-name">--</span></p>
+                                        <p style="color: blue;">Exam date: <span id="detected-exam-date">--</span></p>
+                                        <p style="color: blue;font-size:15px">Admit card authenticity: <b><span id="detected-check-admit-authenticity" style="color: green;">--</span></b></p>
+                                        
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                        </div>
+                     </div>
+                     <div id="tab-2" class="tab-pane fade">
+                        <div class="transparent">
+                        </div>
+                     </div>
+                     <div id="tab-3" class="tab-pane fade">
+                        <div class="transparent">
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+
+
+<script>
+function convertToBase64() {
+   const fileInput = document.getElementById('admit_card_image');
+   const hiddenInput = document.getElementById('admit_card_base64');
+   const form = document.getElementById('scanForm');
+   const examDateInput = document.querySelector('input[name="exam_date"]');
+
+   if (fileInput.files.length === 0) {
+      alert('Please select an image.');
+      return false;
+   }
+
+   if (!examDateInput.value) {
+      alert('Please select an exam date.');
+      return false;
+   }
+
+   const file = fileInput.files[0];
+   const reader = new FileReader();
+
+   reader.onloadend = function () {
+      hiddenInput.value = reader.result;
+      form.submit();
+   };
+
+   reader.readAsDataURL(file);
+
+   return false;
+}
+function fetchDetectedInfo() {
+   fetch('/detected-info')
+       .then(response => response.json())
+       .then(data => {
+           if (data.id) {
+               document.getElementById("detected-id").innerText = data.id;
+           }
+           if (data.name) {
+               document.getElementById("detected-name").innerText = data.name;
+           }
+           if (data.exam_date) {
+               document.getElementById("detected-exam-date").innerText = data.exam_date;
+           }
+           if (data.check_admit_authenticity) {
+               document.getElementById("detected-check-admit-authenticity").innerText = data.check_admit_authenticity;
+           }
+       });
+}
+
+setInterval(fetchDetectedInfo, 2000);
+
+document.getElementById('exam_date').addEventListener('change', function () {
+    const examDate = this.value;
+
+    fetch('/update-exam-date', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ exam_date: examDate })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Date updated:', data));
+});
+
+</script>
+
+{% endblock %}
